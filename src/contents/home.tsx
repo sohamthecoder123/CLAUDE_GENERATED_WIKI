@@ -633,7 +633,7 @@ function Chain() {
 /* ---------- explore the wiki ---------- */
 
 const EXPLORE: { title: string; href: string; icon: string }[] = [
-  { title: "Project Description", href: "/description", icon: "icProject" },
+  { title: "Project Description", href: "iisc-bengaluru/description", icon: "icProject" },
   { title: "Human Practices", href: "/human-practices", icon: "icPractices" },
   { title: "Team", href: "/team", icon: "icTeam" },
 ];

@@ -1,0 +1,321 @@
+/* ==========================================================================
+   Ideation Cycles page
+   Everything is scoped under .ide-page so it cannot clash with Bootstrap.
+   Layout and palette follow the Sustainability page.
+
+   TYPE SCALE (identical on every page of the wiki):
+     Page title      Inter 700, clamp(40px, 7.4vw, 104px)/1.02
+     Section heading Inter 700, clamp(28px, 3.4vw, 46px)/1.1
+     Sub-heading     Inter 700, clamp(20px, 2vw, 27px)/1.25
+     Navigator head  Inter 700, 20px/1.2
+     Running text    "Segoe UI", "Noto Sans", 400, clamp(17px, 1.6vw + 1px, 24px)/1.5
+     Secondary text  0.8em of running text, line-height 1.5
+     Headings carry font-feature-settings "cv11" 1, "ss01" 1 for the single-storey g.
+
+   FONTS: iGEM only serves files from static.igem.wiki. Upload the woff2 files
+   for Inter (600, 700) and Noto Sans (400, 500, 600) there, then paste these
+   rules here or in a shared stylesheet (replace TEAM_PATH with your folder).
+
+   @font-face { font-family: "Inter"; font-weight: 600; font-display: swap;
+     src: url("https://static.igem.wiki/teams/TEAM_PATH/fonts/inter-600.woff2") format("woff2"); }
+   @font-face { font-family: "Inter"; font-weight: 700; font-display: swap;
+     src: url("https://static.igem.wiki/teams/TEAM_PATH/fonts/inter-700.woff2") format("woff2"); }
+   @font-face { font-family: "Noto Sans"; font-weight: 400; font-display: swap;
+     src: url("https://static.igem.wiki/teams/TEAM_PATH/fonts/noto-sans-400.woff2") format("woff2"); }
+   @font-face { font-family: "Noto Sans"; font-weight: 500; font-display: swap;
+     src: url("https://static.igem.wiki/teams/TEAM_PATH/fonts/noto-sans-500.woff2") format("woff2"); }
+   @font-face { font-family: "Noto Sans"; font-weight: 600; font-display: swap;
+     src: url("https://static.igem.wiki/teams/TEAM_PATH/fonts/noto-sans-600.woff2") format("woff2"); }
+
+   Segoe UI is a Windows system font and its licence does not allow uploading
+   it, so Windows readers get it from their own machine and everyone else sees
+   Noto Sans, the closest open-licence match.
+   ========================================================================== */
+
+.ide-page {
+  --pine: #0f4a3f;
+  --night: #0b3029;
+  --band-top: 56px;
+  /* height of the site's fixed navbar; the hero title and sticky navigator clear it */
+  --nav-h: var(--wk-nav-h, 72px);
+  --teal: #1d715f;
+  --mint: #8bbba6;
+  --mist: #eef5f1;
+  --paper: #fbfdfc;
+  --grid: rgba(29, 113, 95, 0.07);
+  --ink: #17322b;
+  --muted: #4f6a62;
+  --on-dark: #e7f3ee;
+  --on-dark-muted: #b0cfc3;
+  --rust: #8b4a36;
+  --amber: #d08a2c;
+  --cream: #fff8cf;
+  /* running text matches Aadya's reference: Segoe UI where installed (Windows), Noto Sans elsewhere */
+  --body: "Segoe UI", "Noto Sans", system-ui, -apple-system, sans-serif;
+  /* 24px on wide screens, easing down to 17px on phones */
+  --text: clamp(17px, 1.6vw + 1px, 24px);
+  --title: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --side: 336px;
+
+  background: var(--mist);
+  color: var(--ink);
+  font: 400 var(--text)/1.5 var(--body);
+  /* tilted notes must not widen the page; clip (unlike hidden) keeps the sticky panels working */
+  overflow-x: clip;
+}
+.ide-page *, .ide-page *::before, .ide-page *::after { box-sizing: border-box; }
+.ide-page p { margin: 0 0 1.1em; max-width: 64ch; }
+
+/* ---------- body: navigator + content, starting below the hero ---------- */
+.ide-body { display: grid; grid-template-columns: var(--side) minmax(0, 1fr); }
+
+/* ---------- left navigator: a list of sections on the Sustainability panel ---------- */
+/* a floating panel: its top lines up with the first section heading, then it sticks */
+.ide-side {
+  position: sticky;
+  top: calc(var(--nav-h) + 16px);
+  align-self: start;
+  z-index: 20;
+  margin: var(--band-top) 0 24px 16px;
+  padding: 26px 18px 26px 22px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--teal);
+  color: var(--on-dark);
+  box-shadow: 0 24px 50px -24px rgba(6, 40, 33, 0.55);
+}
+.ide-side-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+.ide-side::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(8, 44, 37, 0) 0%, rgba(8, 44, 37, 0.22) 100%);
+}
+.ide-toc { position: relative; z-index: 1; display: flex; gap: 16px; }
+.ide-toc-list { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+.ide-toc ol { list-style: none; margin: 0; padding: 0 0 0 12px; display: flex; flex-direction: column; gap: 4px; border-left: 1px solid rgba(255, 248, 207, 0.25); }
+.ide-page .ide-toc-cycle {
+  display: block; padding: 0 0 8px; margin: 0; border: 0;
+  font: 700 20px/1.2 var(--title); letter-spacing: 0.02em; color: var(--cream);
+}
+.ide-page .ide-toc-cycle:not(.is-on) { opacity: 0.75; }
+.ide-toc a {
+  display: block; padding: 7px 0 7px 12px; margin-left: -13px;
+  border-left: 3px solid transparent;
+  font: 600 0.8em/1.5 var(--title); letter-spacing: 0.03em; text-transform: uppercase;
+  color: rgba(241, 248, 244, 0.7); text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+.ide-toc a b { display: none; }
+.ide-toc a:hover { color: #fff; }
+/* the section being read: full cream text and a solid stretch of the rule beside it */
+.ide-toc ol a.is-on { color: var(--cream); border-left-color: var(--cream); }
+.ide-toc a:focus-visible { outline: 2px solid var(--mint); outline-offset: 4px; border-radius: 6px; }
+/* reading progress, down the right edge of the panel */
+.ide-toc-bar { flex: none; width: 5px; border-radius: 3px; background: rgba(255, 248, 207, 0.22); overflow: hidden; }
+.ide-toc-bar span { display: block; height: 100%; border-radius: 3px; background: var(--cream); transform: scaleY(0); transform-origin: top; }
+
+/* ---------- hero ---------- */
+.ide-main { min-width: 0; }
+.ide-hero { position: relative; height: clamp(320px, 42vw, 600px); overflow: hidden; }
+.ide-hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.ide-hero-text {
+  position: absolute; right: 6%; top: max(30%, calc(var(--nav-h) + 24px)); left: 6%;
+  text-align: right; pointer-events: none;
+}
+.ide-title {
+  margin: 0;
+  font: 700 clamp(40px, 7.4vw, 104px)/1.02 var(--title);
+  letter-spacing: -0.015em;
+  color: var(--cream);
+  text-shadow: 0 8px 30px rgba(6, 40, 33, 0.25);
+  animation: ide-rise 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes ide-rise { from { opacity: 0; transform: translateY(30px); } }
+.ide-wave { position: absolute; left: 0; bottom: -1px; width: 100%; height: 46%; display: block; }
+.ide-wave path { fill: var(--mist); }
+
+/* ---------- bands ---------- */
+.ide-main > .ide-band { margin-left: calc(-1 * var(--side)); padding-left: var(--side); }
+/* The band's colour is painted by a ::before layer that carries the zigzag,
+   not by clipping the band itself, so sticky or pinned stages inside a band
+   are never cut off. The edge looks the same. */
+.ide-band { position: relative; z-index: 0; scroll-margin-top: calc(var(--nav-h) + 8px); margin-top: -60px; padding: 120px 0 100px; }
+.ide-band::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  clip-path: polygon(0 60px, 12% 10px, 30% 48px, 52% 0, 71% 40px, 88% 6px, 100% 34px, 100% 100%, 0 100%);
+}
+.ide-band--first { margin-top: 0; padding-top: var(--band-top); z-index: 1; }
+.ide-band--first::before { clip-path: none; }
+.ide-band:last-child { padding-bottom: 140px; }
+.ide-band--mist::before, .ide-band--paper::before {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.ide-band--mist::before { background-color: var(--mist); }
+.ide-band--paper::before { background-color: var(--paper); }
+.ide-band--dark::before { background: var(--pine); }
+.ide-band--teal::before { background: var(--teal); }
+.ide-band--dark, .ide-band--teal { color: var(--on-dark); }
+
+/* a figure that closes a cycle: centred, the full width of the text column */
+.ide-figure-full { display: block; width: 100%; height: auto; margin: clamp(32px, 5vw, 56px) auto 0; }
+
+.ide-inner { max-width: 1080px; margin: 0 auto; padding-left: clamp(20px, 4vw, 56px); padding-right: clamp(20px, 4vw, 56px); }
+.ide-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+.ide-split--funnel { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
+
+.ide-page h1, .ide-page h2, .ide-page h3, .ide-page h4, .ide-toc, .ide-quote p { font-feature-settings: "cv11" 1, "ss01" 1; }
+.ide-page h2, .ide-page h3 {
+  font: 700 clamp(28px, 3.4vw, 46px)/1.1 var(--title);
+  letter-spacing: -0.02em; margin: 0 0 0.45em; text-wrap: balance; color: var(--pine);
+}
+.ide-band--dark h2, .ide-band--teal h2, .ide-band--dark h3, .ide-band--teal h3 { color: var(--cream); }
+.ide-band--cycle-only .ide-cycle-head { margin-bottom: 0; }
+.ide-toc-cycle b { display: none; }
+.ide-band--dark .ide-cycle-head, .ide-band--teal .ide-cycle-head { border-color: rgba(255, 248, 207, 0.25); }
+.ide-band--dark .ide-cycle-lead, .ide-band--teal .ide-cycle-lead { color: #f0c27a; }
+.ide-page .ide-kicker {
+  margin: 0 0 0.3em; font: 600 0.8em/1.3 var(--title); text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--rust); letter-spacing: 0.02em;
+}
+.ide-band--dark .ide-kicker, .ide-band--teal .ide-kicker { color: #f0c27a; }
+.ide-page figure { margin: 0; }
+.ide-page svg text { font-family: var(--body); }
+
+/* shared idea icon strokes */
+.ide-icon { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+
+@keyframes ide-twinkle { 50% { opacity: 0.55; } }
+
+/* ---------- cycle heading: groups the sections that follow ---------- */
+.ide-cycle-head { scroll-margin-top: calc(var(--nav-h) + 8px); margin-bottom: clamp(30px, 5vw, 56px); padding-bottom: 18px; border-bottom: 2px solid rgba(15, 74, 63, 0.15); }
+.ide-page .ide-cycle-head h2 { font-size: clamp(40px, 5.4vw, 76px); margin: 0; }
+.ide-page .ide-cycle-lead { margin: 0.5em 0 0; max-width: none; font: 600 clamp(17px, 1.6vw, 22px)/1.3 var(--title); letter-spacing: -0.01em; color: var(--rust); }
+
+/* the principle, as a pull quote with a bulb that lights up */
+.ide-quote {
+  display: flex; align-items: center; gap: clamp(14px, 3vw, 30px);
+  margin: clamp(30px, 5vw, 60px) 0 0; padding: clamp(18px, 3vw, 30px) clamp(20px, 4vw, 40px);
+  background: var(--cream); border-radius: 18px;
+  box-shadow: 0 22px 40px -28px rgba(15, 74, 63, 0.6);
+  border-left: 6px solid var(--amber);
+}
+.ide-page .ide-quote p {
+  margin: 0; max-width: none;
+  font: 700 clamp(21px, 2.3vw, 31px)/1.3 var(--title); letter-spacing: -0.015em; color: var(--pine);
+}
+.ide-quote-bulb { flex: none; width: clamp(48px, 7vw, 76px); height: auto; overflow: visible; }
+.ide-quote-bulb path { fill: none; stroke: var(--pine); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.ide-quote-bulb path:first-of-type { fill: #ffd977; }
+.ide-rays line { stroke: var(--amber); stroke-width: 3.2; stroke-linecap: round; }
+.ide-motion .ide-quote .ide-rays { opacity: 0; transform: scale(0.6); transform-origin: 32px 30px; }
+.ide-motion .ide-quote.is-in .ide-rays { animation: ide-rays 2.8s ease-in-out 0.6s infinite both; }
+.ide-motion .ide-quote .ide-quote-bulb path:first-of-type { fill: transparent; transition: fill 0.6s 0.5s; }
+.ide-motion .ide-quote.is-in .ide-quote-bulb path:first-of-type { fill: #ffd977; }
+@keyframes ide-rays { 0% { opacity: 0; transform: scale(0.6); } 25%, 75% { opacity: 1; transform: none; } 100% { opacity: 0.5; transform: scale(1.04); } }
+
+/* ---------- 2. the idea board: notes pinned one after another ---------- */
+.ide-board {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: clamp(18px, 2.6vw, 30px); margin-top: 26px;
+}
+.ide-card {
+  position: relative;
+  padding: 26px 22px 20px;
+  background: var(--cream); color: var(--ink);
+  border-radius: 6px 6px 18px 6px;
+  border-top: 8px solid var(--c);
+  box-shadow: 0 18px 30px -18px rgba(0, 0, 0, 0.6);
+  transform: rotate(var(--tilt));
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s;
+}
+.ide-card:hover { transform: rotate(0deg) translateY(-6px); box-shadow: 0 26px 40px -20px rgba(0, 0, 0, 0.7); }
+.ide-pin {
+  position: absolute; top: -16px; left: 50%; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f6d38f, var(--c) 60%);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.45);
+}
+.ide-card-icon {
+  width: 56px; height: 56px; padding: 6px; border-radius: 50%; background: var(--c); display: block; margin-bottom: 12px;
+}
+.ide-page .ide-card h4 { font: 700 clamp(20px, 2vw, 27px)/1.25 var(--title); letter-spacing: -0.01em; margin: 0 0 8px; color: var(--pine); }
+.ide-page .ide-card p { font-size: 0.8em; line-height: 1.5; margin: 0; }
+.ide-motion .ide-board .ide-card[data-reveal] { opacity: 0; transform: translateY(-50px) rotate(calc(var(--tilt) * -4)) scale(1.06); }
+.ide-motion .ide-board .ide-card[data-reveal].is-in {
+  opacity: 1; transform: rotate(var(--tilt));
+  transition: opacity 0.5s ease calc(var(--i) * 0.14s), transform 0.75s cubic-bezier(0.3, 1.4, 0.5, 1) calc(var(--i) * 0.14s), box-shadow 0.4s;
+}
+.ide-motion .ide-board .ide-card.is-in:hover { transform: rotate(0deg) translateY(-6px); transition-delay: 0s; }
+.ide-motion .ide-card .ide-pin { transform: translateY(-12px); opacity: 0; transition: transform 0.4s, opacity 0.3s; }
+.ide-motion .ide-card.is-in .ide-pin { transform: none; opacity: 1; transition-delay: calc(var(--i) * 0.14s + 0.45s); }
+
+/* ---------- 3. the funnel ---------- */
+/* the funnel sticks while the reader scrolls through its track, which drives the animation */
+.ide-split--funnel { align-items: start; }
+/* sticky stays inside its parent's content box, so the scroll room is a spacer, not padding */
+.ide-funnel-track::after { content: ""; display: block; height: 55vh; }
+.ide-funnel { position: sticky; top: max(calc(var(--nav-h) + 16px), calc(50vh + var(--nav-h) / 2 - 340px)); }
+.ide-funnel-text { position: sticky; top: max(calc(var(--nav-h) + 16px), calc(50vh + var(--nav-h) / 2 - 260px)); padding-top: 40px; }
+.ide-funnel svg { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; overflow: visible; }
+.ide-funnel-body { fill: rgba(29, 113, 95, 0.08); stroke: var(--teal); stroke-width: 3; stroke-linejoin: round; }
+.ide-funnel-rim { fill: rgba(29, 113, 95, 0.12); stroke: var(--teal); stroke-width: 3; }
+.ide-funnel-neck { fill: none; stroke: var(--teal); stroke-width: 3; }
+.ide-chip { stroke: #fff; stroke-width: 3; }
+.ide-funnel .ide-chip { filter: drop-shadow(0 6px 8px rgba(15, 74, 63, 0.3)); }
+.ide-bob { animation: ide-bob 3.4s ease-in-out var(--d) infinite; }
+@keyframes ide-bob { 50% { transform: translateY(-5px); } }
+.ide-chip-label { font: 600 17px var(--title); fill: var(--ink); text-anchor: middle; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
+.ide-chip-label.is-final { font-weight: 800; fill: var(--pine); }
+.ide-aside { font: 500 15px var(--body); fill: var(--muted); text-anchor: middle; letter-spacing: 0.08em; text-transform: uppercase; }
+.ide-page .ide-tally {
+  margin: 10px auto 0; max-width: none; text-align: center;
+  font: 500 0.8em/1.5 var(--body); color: var(--muted);
+}
+.ide-tally b { font: 600 1em/1.2 var(--body); color: var(--pine); font-variant-numeric: tabular-nums; margin-right: 2px; }
+
+/* ---------- scroll reveal ---------- */
+.ide-motion [data-reveal] {
+  opacity: 0; transform: translateY(34px);
+  transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.ide-motion [data-reveal].is-in { opacity: 1; transform: none; }
+
+/* ---------- smaller screens ---------- */
+@media (max-width: 1240px) {
+  .ide-split, .ide-split--funnel { grid-template-columns: minmax(0, 1fr); }
+  .ide-funnel-text { position: static; padding-top: 0; }
+  .ide-funnel { top: calc(var(--nav-h) + 12px); }
+  .ide-funnel-track::after { height: 40vh; }
+}
+@media (max-width: 1100px) {
+  .ide-page { --side: 276px; }
+}
+@media (max-width: 900px) {
+  .ide-hero { height: clamp(240px, 56vw, 400px); }
+  .ide-hero-text { top: max(22%, calc(var(--nav-h) + 20px)); right: 5%; }
+  .ide-title { font-size: clamp(40px, 9vw, 72px); }
+  .ide-band { padding: 100px 0 70px; }
+}
+/* phones: the navigator stays on the left as a slim rail of section numbers */
+@media (max-width: 680px) {
+  .ide-page { --side: 62px; }
+  .ide-side { margin-left: 8px; padding: 16px 8px; border-radius: 16px; }
+  .ide-toc { gap: 6px; }
+  .ide-toc-cycle { padding: 2px 0 6px !important; text-align: center; }
+  .ide-toc-cycle span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ide-toc-cycle b { display: block; font: 700 13px/1 var(--title); }
+  .ide-toc ol { gap: 10px; padding: 0; border: 0; }
+  .ide-toc a { padding: 2px 0; margin: 0; border: 0; text-align: center; }
+  .ide-toc a span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ide-toc a b { display: block; font: 700 1em/1.2 var(--title); }
+  .ide-board { grid-template-columns: minmax(0, 1fr); padding: 0 8px; }
+  .ide-hero-text { left: 4%; right: 4%; }
+  .ide-quote { flex-direction: column; align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ide-funnel-track::after { height: 0; }
+  .ide-title { animation: none; }
+  .ide-bob { animation: none; }
+}

@@ -1,0 +1,9 @@
+## Involving Our Juniors
+
+Continuing an old IISc tradition, we invited our juniors and the incoming batch of undergraduate students — many arriving from academic backgrounds well outside biology — to write short pieces in their own words on a handful of topics related to MOSKATEER. The idea was simple: give students who had never encountered synthetic biology, RNAi, or vector-borne disease research a low-pressure way into the subject, using our own project as the entry point rather than a textbook.
+
+Each student picked a topic from a list we put together spanning the different layers of the project — from the basic biology of malaria transmission to the more specialized concepts underlying our approach, like RNAi silencing and paratransgenesis — and wrote about it entirely in their own words, without being asked to reproduce technical jargon or match a particular format. This mattered as much for us as it did for them: seeing how a first-year student with no prior biology background chose to explain a concept back to us was often a better gauge of whether our own explanations actually made sense than any internal review could have been.
+
+To our surprise, the exercise turned out to be far more valuable than we expected. Several juniors who took part went on to seek out more about the project on their own, with a few developing a specific interest in the dry lab tools we use, well beyond what the original writing exercise asked of them.
+
+What started as a simple onboarding activity ended up doing double duty as an informal pipeline into the team. A few of these students have since stayed involved in an unofficial capacity, sitting in on discussions or asking follow-up questions well after their piece was submitted, and it's given us a natural, low-stakes way to keep the next generation of IISc undergraduates engaged with the kind of work MOSKATEER represents, long before they'd typically be in a position to formally join an iGEM team.

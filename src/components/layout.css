@@ -1,0 +1,329 @@
+/* ==========================================================================
+   Site chrome: navbar and footer. Scoped under .wk-nav / .wk-foot.
+   ========================================================================== */
+
+/* ---------------------------------- navbar -------------------------------- */
+.wk-nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 900;
+  height: var(--wk-nav-h);
+  display: flex;
+  align-items: center;
+  /* Transparent over a hero, so the hero reads full-bleed. */
+  background: transparent;
+  transition: background .25s ease, box-shadow .25s ease, backdrop-filter .25s ease;
+}
+.wk-nav.is-solid,
+.wk-nav.is-open {
+  background: rgba(11, 48, 41, .86);
+  backdrop-filter: saturate(140%) blur(10px);
+  box-shadow: 0 10px 30px -18px rgba(6, 40, 33, .8);
+}
+
+.wk-nav-in {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0 clamp(16px, 3vw, 32px);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.wk-brand {
+  display: flex;
+  align-items: center;
+  flex: none;
+  text-decoration: none;
+  color: var(--wk-on-dark);
+}
+/* The banner image as supplied, scaled by height so it stays in proportion.
+   The background of the supplied crop has been keyed out so the drawing sits straight on the bar; it is about 2.7 times wider than tall. */
+.wk-brand-logo {
+  display: block;
+  height: clamp(48px, 5.4vw, 66px);
+  width: auto;
+  max-width: 50vw;
+}
+
+.wk-menu {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 22px);
+}
+.wk-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 2px;
+  color: var(--wk-on-dark);
+  text-decoration: none;
+  font: 600 .72em/1.2 var(--wk-title);
+  font-feature-settings: "cv11" 1, "ss01" 1;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  white-space: nowrap;
+  opacity: .82;
+}
+.wk-link:hover { opacity: 1; }
+.wk-link::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: var(--wk-cream);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .2s ease;
+}
+.wk-link:hover::after { transform: scaleX(1); }
+.wk-link.active { opacity: 1; color: var(--wk-cream); }
+.wk-link.active::after { transform: scaleX(1); }
+
+/* A group is a hover-open dropdown on wide screens. */
+/* The panel is positioned against the navbar's inner container, not the group,
+   so a wide one stays inside the page however near the right the group sits. */
+.wk-group { position: static; display: flex; align-items: center; }
+.wk-group-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 2px;
+  color: var(--wk-on-dark);
+  font: 600 .72em/1.2 var(--wk-title);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  opacity: .82;
+  cursor: default;
+}
+.wk-group-label::after {
+  content: "";
+  width: 6px; height: 6px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+/* ---- the hover panel: one horizontal row of icon + name + line ---- */
+.wk-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  transform: translateY(-6px);
+  padding: 20px 22px;
+  max-width: calc(100vw - 40px);
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 2), max-content);
+  gap: 10px 34px;
+  border-radius: 18px;
+  background: rgba(11, 48, 41, .97);
+  box-shadow: 0 30px 60px -28px rgba(6, 40, 33, .95);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .18s ease, transform .18s ease, visibility .18s;
+}
+.wk-group:hover .wk-panel,
+.wk-group:focus-within .wk-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* below this the widest panel no longer fits on one line, so it wraps */
+@media (max-width: 1400px) {
+  .wk-panel { grid-template-columns: repeat(min(var(--cols, 2), 3), max-content); }
+}
+.wk-panel-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--wk-on-dark);
+}
+.wk-panel-item:hover,
+.wk-panel-item:focus-visible { background: rgba(139, 187, 166, .16); }
+.wk-panel-icon { flex: none; color: var(--wk-cream); }
+.wk-panel-text { display: flex; align-items: center; }
+.wk-panel-name {
+  font: 700 .82em/1.2 var(--wk-title);
+  font-feature-settings: "cv11" 1, "ss01" 1;
+  color: var(--wk-cream);
+  white-space: nowrap;
+}
+.wk-panel-lead {
+  font-size: .72em;
+  line-height: 1.3;
+  color: var(--wk-mint);
+  white-space: nowrap;
+}
+
+.wk-burger { display: none; }
+
+/* ---- navbar under 1100px: a full-height sheet ---- */
+@media (max-width: 1100px) {
+  .wk-burger {
+    display: grid;
+    place-items: center;
+    margin-left: auto;
+    width: 42px; height: 42px;
+    border: 0;
+    border-radius: 12px;
+    background: rgba(231, 243, 238, .14);
+    cursor: pointer;
+  }
+  .wk-burger > span[aria-hidden] {
+    position: relative;
+    width: 18px; height: 2px;
+    background: var(--wk-on-dark);
+    box-shadow: 0 -6px 0 var(--wk-on-dark), 0 6px 0 var(--wk-on-dark);
+  }
+  .wk-nav.is-open .wk-burger > span[aria-hidden] {
+    background: transparent;
+    box-shadow: none;
+  }
+  .wk-nav.is-open .wk-burger > span[aria-hidden]::before,
+  .wk-nav.is-open .wk-burger > span[aria-hidden]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--wk-on-dark);
+  }
+  .wk-nav.is-open .wk-burger > span[aria-hidden]::before { transform: rotate(45deg); }
+  .wk-nav.is-open .wk-burger > span[aria-hidden]::after { transform: rotate(-45deg); }
+
+  /* Anchored under the bar rather than to the window: the bar's backdrop blur
+     makes it the containing block for fixed children, so a fixed sheet would
+     be only as tall as the bar. */
+  .wk-menu {
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    height: calc(100vh - var(--wk-nav-h));
+    height: calc(100dvh - var(--wk-nav-h));
+    margin: 0;
+    padding: 24px clamp(16px, 5vw, 40px) 64px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    overflow-y: auto;
+    background: #0b3029;
+    transform: translateY(-8px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .2s ease, transform .2s ease, visibility .2s;
+  }
+  .wk-nav.is-open .wk-menu { opacity: 1; visibility: visible; transform: none; }
+
+  .wk-link { font-size: .9em; padding: 12px 4px; }
+  .wk-group { flex-direction: column; align-items: stretch; }
+  .wk-group-label {
+    margin-top: 18px;
+    font-size: .64em;
+    color: var(--wk-mint);
+    cursor: default;
+  }
+  .wk-group-label::after { display: none; }
+  /* in the sheet the panel is simply a stacked list, still with its icons */
+  .wk-panel {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .wk-panel-item { padding: 10px 4px; }
+  .wk-panel-name { font-size: .95em; }
+
+}
+
+/* ---------------------------------- footer -------------------------------- */
+.wk-foot {
+  background: var(--wk-night);
+  color: var(--wk-on-dark);
+  padding: 0 0 36px;
+}
+
+.wk-updown {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 40px clamp(16px, 3vw, 32px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  border-bottom: 1px solid rgba(139, 187, 166, .22);
+}
+.wk-updown-card {
+  display: grid;
+  gap: 4px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: rgba(139, 187, 166, .1);
+  text-decoration: none;
+  color: inherit;
+  transition: background .2s ease, transform .2s ease;
+}
+.wk-updown-card:hover { background: rgba(139, 187, 166, .18); transform: translateY(-2px); }
+.wk-updown-card.is-next { text-align: right; }
+.wk-updown-dir {
+  font: 600 .62em/1.2 var(--wk-title);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--wk-mint);
+}
+.wk-updown-name { font: 700 1em/1.25 var(--wk-title); font-feature-settings: "cv11" 1, "ss01" 1; }
+.wk-updown-lead { font-size: .7em; color: var(--wk-on-dark-muted); }
+
+.wk-foot-in {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 40px clamp(16px, 3vw, 32px) 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(2, minmax(0, 1fr));
+  gap: 32px;
+}
+.wk-foot-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 8px;
+  font: 700 1.1em/1.2 var(--wk-title);
+  font-feature-settings: "cv11" 1, "ss01" 1;
+  color: var(--wk-cream);
+}
+.wk-foot-line { margin: 0; font-size: .74em; color: var(--wk-on-dark-muted); max-width: 52ch; }
+.wk-foot-head {
+  margin: 0 0 10px;
+  font: 600 .62em/1.2 var(--wk-title);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--wk-mint);
+}
+.wk-foot-col ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+.wk-foot-col a {
+  color: var(--wk-on-dark);
+  text-decoration: none;
+  font-size: .74em;
+  opacity: .86;
+}
+.wk-foot-col a:hover { opacity: 1; text-decoration: underline; }
+
+.wk-foot-legal {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 18px clamp(16px, 3vw, 32px) 0;
+  border-top: 1px solid rgba(139, 187, 166, .22);
+  font-size: .66em;
+  color: var(--wk-on-dark-muted);
+}
+
+@media (max-width: 860px) {
+  .wk-updown { grid-template-columns: 1fr; }
+  .wk-updown-card.is-next { text-align: left; }
+  .wk-foot-in { grid-template-columns: 1fr; }
+}

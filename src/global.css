@@ -1,0 +1,138 @@
+/* ==========================================================================
+   MOSKATEER wiki — global stylesheet
+   Loaded once, after Bootstrap, in src/main.tsx.
+
+   This file holds only three things:
+     1. the self-hosted webfonts,
+     2. the site-wide type scale, as custom properties,
+     3. a very small reset.
+
+   Every page's own look lives in src/contents/<page>.css, scoped under that
+   page's root class (.sus-page, .hm-page, .ide-page, .edu-page, .wk-page ...),
+   so no page can leak styles into another or into Bootstrap.
+
+   FONTS — fixed across the whole wiki, do not vary per page:
+     Headings      Inter 700, font-feature-settings "cv11" 1, "ss01" 1
+                   stack: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif
+     Running text  "Segoe UI", "Noto Sans", system-ui, -apple-system, sans-serif
+                   400, clamp(17px, 1.6vw + 1px, 24px), line-height 1.5
+     Secondary     0.8em of running text, same line-height
+     Amatic SC 700 decorative numerals only (the SDG numbers)
+     Onest         the illustration system's label face, used inside the SVGs
+
+   Segoe UI is a Windows system font and cannot be redistributed, so Windows
+   readers see Segoe UI and everyone else sees Noto Sans. That is intended.
+
+   iGEM only serves assets from static.igem.wiki, so there are no CDN links
+   anywhere in this project. The woff2 files live in public/fonts/ for local
+   development; for the live wiki, upload the same files to
+   static.igem.wiki/teams/<TEAM_PATH>/fonts/ and point the four @font-face rules
+   below at them. Nothing else needs to change.
+   ========================================================================== */
+
+/* The three text families ship as variable fonts: one file each, covering the
+   whole weight range this wiki uses. Declaring a font-weight range rather than
+   one weight per file means four font requests instead of eleven, and no
+   faux-bold anywhere. Amatic SC is a static face with one weight.
+
+   The URLs are absolute, because a bundled stylesheet is served from /assets/
+   and a relative path would resolve against that. For the iGEM build, replace
+   the four paths below with the static.igem.wiki URLs the files were uploaded
+   to; nothing else in the project refers to them. */
+
+@font-face {
+  font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url("/fonts/inter-var.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Noto Sans"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url("/fonts/noto-sans-var.woff2") format("woff2");
+}
+/* Onest is the label face inside the illustration SVGs. Inline SVG inherits
+   fonts from the page, so self-hosting it is what makes the figures render in
+   the intended face rather than a fallback. */
+@font-face {
+  font-family: "Onest"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url("/fonts/onest-var.woff2") format("woff2");
+}
+/* Amatic SC — the large decorative SDG numerals on the Sustainability page. */
+@font-face {
+  font-family: "Amatic SC"; font-style: normal; font-weight: 700; font-display: swap;
+  src: url("/fonts/amatic-sc-700.woff2") format("woff2");
+}
+
+/* --------------------------------------------------------------------------
+   Site tokens. The colours are the ones the landing banner uses; every page
+   repeats them locally so a page file can be lifted out on its own, but these
+   are the canonical values.
+   -------------------------------------------------------------------------- */
+:root {
+  --wk-pine: #0f4a3f;
+  --wk-night: #0b3029;
+  --wk-teal: #1d715f;
+  --wk-mint: #8bbba6;
+  --wk-mist: #eef5f1;
+  --wk-paper: #fbfdfc;
+  --wk-sand: #f6efdf;
+  --wk-cream: #fff8cf;
+  --wk-field: #b7d6c4;
+  --wk-rust: #8b4a36;
+  --wk-ink: #17322b;
+  --wk-muted: #4f6a62;
+  --wk-on-dark: #e7f3ee;
+  --wk-on-dark-muted: #b0cfc3;
+
+  --wk-title: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --wk-body: "Segoe UI", "Noto Sans", system-ui, -apple-system, sans-serif;
+  --wk-display: "Amatic SC", "Patrick Hand", cursive;
+
+  /* Height of the site navbar. Page heroes and sticky navigators offset by it. */
+  --wk-nav-h: 72px;
+}
+
+* , *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  margin: 0;
+  background: var(--wk-paper);
+  color: var(--wk-ink);
+  font: 400 clamp(17px, 1.6vw + 1px, 24px)/1.5 var(--wk-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--wk-title);
+  font-weight: 700;
+  font-feature-settings: "cv11" 1, "ss01" 1;
+  letter-spacing: -0.015em;
+}
+
+img, svg { max-width: 100%; }
+
+/* Keyboard focus must stay visible everywhere; Bootstrap's reset is too quiet. */
+:focus-visible {
+  outline: 3px solid var(--wk-rust);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Skip link, first thing in the tab order, visible only when focused. */
+.wk-skip {
+  position: fixed;
+  top: 8px; left: 8px;
+  z-index: 2000;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--wk-night);
+  color: var(--wk-on-dark);
+  font: 600 0.8em/1.5 var(--wk-title);
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.wk-skip:focus-visible { transform: none; }

@@ -1,0 +1,6 @@
+/* Gallery: photographs run as a centred, wrapping row, each at its own proportion, no frames. */
+.gl-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(14px, 2vw, 28px); margin-top: clamp(20px, 3vw, 36px); }
+.gl-grid figure { margin: 0; }
+.gl-grid img { display: block; height: clamp(150px, 18vw, 260px); width: auto; max-width: 100%; border-radius: 6px; }
+.is-gallery .wk-inner--wide { max-width: 1320px; }
+@media (max-width: 600px) { .gl-grid img { height: auto; width: 100%; } .gl-grid figure { width: 100%; } }

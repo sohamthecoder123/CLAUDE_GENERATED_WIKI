@@ -1,0 +1,30 @@
+/* Figures from the illustration system. */
+
+.wk-fig { margin: 0 0 28px; }
+
+.wk-fig-art {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.wk-fig-art.is-in { opacity: 1; transform: none; }
+.wk-fig-art svg { display: block; width: 100%; height: auto; }
+
+.wk-fig figcaption {
+  margin: 10px 2px 0;
+  font-size: .8em;
+  line-height: 1.5;
+  color: var(--wk-muted);
+}
+.wk-band.is-dark .wk-fig figcaption,
+.wk-band.is-teal .wk-fig figcaption { color: var(--wk-on-dark-muted); }
+.wk-fig figcaption b { color: var(--wk-ink); font-weight: 600; }
+.wk-band.is-dark .wk-fig figcaption b,
+.wk-band.is-teal .wk-fig figcaption b { color: var(--wk-cream); }
+
+/* A wide figure escapes the prose column and runs the width of the band. */
+.wk-fig.is-wide { grid-column: 1 / -1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wk-fig-art { opacity: 1; transform: none; transition: none; }
+}

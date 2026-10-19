@@ -1,0 +1,401 @@
+/* ==========================================================================
+   The shared page layout.
+
+   This is the Ideation page's stylesheet with the class prefix `wk-` instead of
+   `ide-`: same tokens, same type scale, same hero, navigator, bands and
+   reveals. wiki/ideation-page/LAYOUT-SPEC.md is the written spec and
+   wiki/ideation-page/src/contents/ideation.css is the source of truth — when
+   the two disagree, copy from there rather than re-deriving a value here.
+
+   Everything is scoped under .wk-page so it cannot clash with Bootstrap.
+
+   TYPE SCALE (identical on every page of the wiki):
+     Page title      Inter 700, clamp(40px, 7.4vw, 104px)/1.02
+     Group heading   Inter 700, clamp(40px, 5.4vw, 76px)
+     Section heading Inter 700, clamp(28px, 3.4vw, 46px)/1.1
+     Sub-heading     Inter 700, clamp(20px, 2vw, 27px)/1.25
+     Navigator head  Inter 700, 20px/1.2
+     Running text    "Segoe UI", "Noto Sans", 400, clamp(17px, 1.6vw + 1px, 24px)/1.5
+     Secondary text  0.8em of running text, line-height 1.5
+     Headings carry font-feature-settings "cv11" 1, "ss01" 1 for the single-storey g.
+
+   Fonts are declared once in src/global.css. On iGEM they come from
+   static.igem.wiki; nothing loads from any other host.
+   ========================================================================== */
+
+.wk-page {
+  --pine: #0f4a3f;
+  --night: #0b3029;
+  --band-top: 56px;
+  --teal: #1d715f;
+  --mint: #8bbba6;
+  --mist: #eef5f1;
+  --paper: #fbfdfc;
+  --grid: rgba(29, 113, 95, 0.07);
+  --ink: #17322b;
+  --muted: #4f6a62;
+  --on-dark: #e7f3ee;
+  --on-dark-muted: #b0cfc3;
+  --rust: #8b4a36;
+  --amber: #d08a2c;
+  --cream: #fff8cf;
+  --body: "Segoe UI", "Noto Sans", system-ui, -apple-system, sans-serif;
+  --text: clamp(17px, 1.6vw + 1px, 24px);
+  --title: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --side: 336px;
+
+  background: var(--mist);
+  color: var(--ink);
+  font: 400 var(--text)/1.5 var(--body);
+  /* tilted cards must not widen the page; clip (unlike hidden) keeps sticky working */
+  overflow-x: clip;
+}
+.wk-page *, .wk-page *::before, .wk-page *::after { box-sizing: border-box; }
+.wk-page p { margin: 0 0 1.1em; max-width: 64ch; }
+.wk-page a { color: inherit; }
+.wk-band--dark a, .wk-band--teal a { color: var(--cream); }
+
+/* ---------- body: navigator + content, starting below the hero ---------- */
+.wk-body { display: grid; grid-template-columns: var(--side) minmax(0, 1fr); }
+
+/* ---------- left navigator ---------- */
+.wk-side {
+  position: sticky;
+  /* clears the fixed navbar, which the standalone Ideation page does not have */
+  top: calc(var(--wk-nav-h, 64px) + 16px);
+  align-self: start;
+  z-index: 20;
+  margin: var(--band-top) 0 24px 16px;
+  padding: 26px 18px 26px 22px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--teal);
+  color: var(--on-dark);
+  box-shadow: 0 24px 50px -24px rgba(6, 40, 33, 0.55);
+}
+.wk-side-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+.wk-side::after {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(8, 44, 37, 0) 0%, rgba(8, 44, 37, 0.22) 100%);
+}
+.wk-toc { position: relative; z-index: 1; display: flex; gap: 16px; }
+.wk-toc-list { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+.wk-toc ol {
+  list-style: none; margin: 0; padding: 0 0 0 12px;
+  display: flex; flex-direction: column; gap: 4px;
+  border-left: 1px solid rgba(255, 248, 207, 0.25);
+}
+.wk-page .wk-toc-head {
+  display: block; padding: 0 0 8px; margin: 0; border: 0;
+  font: 700 20px/1.2 var(--title); letter-spacing: 0.02em; color: var(--cream);
+  text-decoration: none;
+}
+.wk-page .wk-toc-head:not(.is-on) { opacity: 0.75; }
+.wk-toc-head b { display: none; }
+.wk-toc a {
+  display: block; padding: 7px 0 7px 12px; margin-left: -13px;
+  border-left: 3px solid transparent;
+  font: 600 0.8em/1.5 var(--title); letter-spacing: 0.03em; text-transform: uppercase;
+  color: rgba(241, 248, 244, 0.7); text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+.wk-toc a b { display: none; }
+.wk-toc a:hover { color: #fff; }
+.wk-toc ol a.is-on { color: var(--cream); border-left-color: var(--cream); }
+.wk-toc a:focus-visible { outline: 2px solid var(--mint); outline-offset: 4px; border-radius: 6px; }
+/* reading progress, down the right edge of the panel */
+.wk-toc-bar { flex: none; width: 5px; border-radius: 3px; background: rgba(255, 248, 207, 0.22); overflow: hidden; }
+.wk-toc-bar span { display: block; height: 100%; border-radius: 3px; background: var(--cream); transform: scaleY(0); transform-origin: top; }
+
+/* ---------- hero ---------- */
+.wk-main { min-width: 0; }
+.wk-hero { position: relative; height: clamp(320px, 42vw, 600px); overflow: hidden; }
+.wk-hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.wk-hero-text {
+  position: absolute; right: 6%; top: 30%; left: 6%;
+  text-align: right; pointer-events: none;
+}
+.wk-title {
+  margin: 0;
+  font: 700 clamp(40px, 7.4vw, 104px)/1.02 var(--title);
+  letter-spacing: -0.015em;
+  color: var(--cream);
+  text-shadow: 0 8px 30px rgba(6, 40, 33, 0.25);
+  animation: wk-rise 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes wk-rise { from { opacity: 0; transform: translateY(30px); } }
+.wk-wave { position: absolute; left: 0; bottom: -1px; width: 100%; height: 46%; display: block; }
+.wk-wave path { fill: var(--mist); }
+
+/* ---------- bands ---------- */
+.wk-main > .wk-band { margin-left: calc(-1 * var(--side)); padding-left: var(--side); }
+/* The band's colour is painted by a ::before layer that carries the zigzag,
+   not by clipping the band itself, so sticky or pinned stages inside a band
+   are never cut off. The edge looks the same. */
+.wk-band { position: relative; z-index: 0; margin-top: -60px; padding: 120px 0 100px; }
+.wk-band::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  clip-path: polygon(0 60px, 12% 10px, 30% 48px, 52% 0, 71% 40px, 88% 6px, 100% 34px, 100% 100%, 0 100%);
+}
+.wk-band--first { margin-top: 0; padding-top: var(--band-top); z-index: 1; }
+.wk-band--first::before { clip-path: none; }
+.wk-band:last-child { padding-bottom: 140px; }
+.wk-band--mist::before, .wk-band--paper::before {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.wk-band--mist::before { background-color: var(--mist); }
+.wk-band--paper::before { background-color: var(--paper); }
+.wk-band--dark::before { background: var(--pine); }
+.wk-band--teal::before { background: var(--teal); }
+.wk-band--dark, .wk-band--teal { color: var(--on-dark); }
+
+.wk-inner { max-width: 1080px; margin: 0 auto; padding-left: clamp(20px, 4vw, 56px); padding-right: clamp(20px, 4vw, 56px); }
+.wk-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+.wk-after { margin-top: clamp(28px, 4vw, 56px); }
+
+.wk-page h1, .wk-page h2, .wk-page h3, .wk-page h4, .wk-toc, .wk-quote p {
+  font-feature-settings: "cv11" 1, "ss01" 1;
+}
+.wk-page h2, .wk-page h3 {
+  font: 700 clamp(28px, 3.4vw, 46px)/1.1 var(--title);
+  letter-spacing: -0.02em; margin: 0 0 0.45em; text-wrap: balance; color: var(--pine);
+}
+.wk-band--dark h2, .wk-band--teal h2,
+.wk-band--dark h3, .wk-band--teal h3 { color: var(--cream); }
+.wk-page .wk-h4, .wk-page .wk-card h4 {
+  font: 700 clamp(20px, 2vw, 27px)/1.25 var(--title);
+  letter-spacing: -0.01em; margin: 1.4em 0 0.4em; color: var(--pine);
+}
+.wk-band--dark .wk-h4, .wk-band--teal .wk-h4 { color: var(--cream); }
+.wk-page .wk-kicker {
+  margin: 0 0 0.3em; font: 600 0.8em/1.3 var(--title); text-transform: uppercase;
+  letter-spacing: 0.02em; color: var(--rust);
+}
+.wk-band--dark .wk-kicker, .wk-band--teal .wk-kicker { color: #f0c27a; }
+.wk-page figure { margin: 0; }
+.wk-page svg text { font-family: var(--body); }
+
+/* the page's own introduction, above the first section */
+.wk-page-head { margin-bottom: clamp(30px, 5vw, 56px); }
+.wk-page .wk-standfirst {
+  margin: 0; max-width: 46ch;
+  font: 600 clamp(19px, 2vw, 28px)/1.35 var(--title);
+  letter-spacing: -0.01em; color: var(--pine);
+}
+.wk-band--dark .wk-standfirst, .wk-band--teal .wk-standfirst { color: var(--cream); }
+
+/* a group heading, grouping the sections that follow it */
+.wk-group-head { margin-bottom: clamp(30px, 5vw, 56px); padding-bottom: 18px; border-bottom: 2px solid rgba(15, 74, 63, 0.15); }
+.wk-page .wk-group-head h2 { font-size: clamp(40px, 5.4vw, 76px); margin: 0; }
+.wk-band--dark .wk-group-head, .wk-band--teal .wk-group-head { border-color: rgba(255, 248, 207, 0.25); }
+.wk-page .wk-group-lead {
+  margin: 0.5em 0 0; max-width: none;
+  font: 600 clamp(17px, 1.6vw, 22px)/1.3 var(--title); letter-spacing: -0.01em; color: var(--rust);
+}
+.wk-band--dark .wk-group-lead, .wk-band--teal .wk-group-lead { color: #f0c27a; }
+
+/* the line under a section heading */
+.wk-page .wk-lead {
+  margin: -0.2em 0 1.1em; max-width: 54ch;
+  font: 400 1.05em/1.4 var(--body); color: var(--muted);
+}
+.wk-band--dark .wk-lead, .wk-band--teal .wk-lead { color: var(--on-dark-muted); }
+
+/* ---------- lists ---------- */
+.wk-list { margin: 0 0 1.2em; padding-left: 1.2em; max-width: 64ch; }
+.wk-list li { margin: 0 0 0.55em; }
+
+/* ---------- pull quote: cream box with a bulb that lights once ---------- */
+.wk-quote {
+  display: flex; align-items: center; gap: clamp(14px, 3vw, 30px);
+  margin: clamp(30px, 5vw, 60px) 0; padding: clamp(18px, 3vw, 30px) clamp(20px, 4vw, 40px);
+  background: var(--cream); border-radius: 18px;
+  box-shadow: 0 22px 40px -28px rgba(15, 74, 63, 0.6);
+  border-left: 6px solid var(--amber);
+}
+.wk-page .wk-quote p {
+  margin: 0; max-width: none;
+  font: 700 clamp(21px, 2.3vw, 31px)/1.3 var(--title); letter-spacing: -0.015em; color: var(--pine);
+}
+.wk-quote cite { display: block; margin-top: 10px; font: 400 0.74em/1.4 var(--body); font-style: normal; color: var(--muted); }
+.wk-quote-bulb { flex: none; width: clamp(48px, 7vw, 76px); height: auto; overflow: visible; }
+.wk-quote-bulb path { fill: none; stroke: var(--pine); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.wk-quote-bulb path:first-of-type { fill: #ffd977; }
+.wk-rays line { stroke: var(--amber); stroke-width: 3.2; stroke-linecap: round; }
+.wk-motion .wk-quote .wk-rays { opacity: 0; transform: scale(0.6); transform-origin: 32px 30px; }
+.wk-motion .wk-quote.is-in .wk-rays { animation: wk-rays 2.8s ease-in-out 0.6s infinite both; }
+.wk-motion .wk-quote .wk-quote-bulb path:first-of-type { fill: transparent; transition: fill 0.6s 0.5s; }
+.wk-motion .wk-quote.is-in .wk-quote-bulb path:first-of-type { fill: #ffd977; }
+@keyframes wk-rays { 0% { opacity: 0; transform: scale(0.6); } 25%, 75% { opacity: 1; transform: none; } 100% { opacity: 0.5; transform: scale(1.04); } }
+
+/* ---------- a note: the quote block's quieter sibling ---------- */
+.wk-note {
+  margin: clamp(24px, 3vw, 40px) 0; padding: clamp(16px, 2vw, 24px) clamp(18px, 3vw, 30px);
+  background: var(--cream); color: var(--ink); border-radius: 14px;
+  border-left: 6px solid var(--rust);
+  box-shadow: 0 18px 34px -28px rgba(15, 74, 63, 0.6);
+  max-width: 68ch;
+}
+.wk-page .wk-note-label {
+  margin: 0 0 6px; font: 700 0.72em/1.3 var(--title);
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--rust);
+}
+.wk-note-body { font-size: 0.8em; }
+.wk-note-body p:last-child { margin-bottom: 0; }
+
+/* ---------- card board: notes pinned one after another ---------- */
+.wk-board {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: clamp(18px, 2.6vw, 30px); margin-top: 26px; padding: 0 8px;
+}
+.wk-card {
+  position: relative;
+  padding: 26px 22px 20px;
+  background: var(--cream); color: var(--ink);
+  border-radius: 6px 6px 18px 6px;
+  border-top: 8px solid var(--c);
+  box-shadow: 0 18px 30px -18px rgba(0, 0, 0, 0.6);
+  transform: rotate(var(--tilt));
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s;
+}
+.wk-card:hover { transform: rotate(0deg) translateY(-6px); box-shadow: 0 26px 40px -20px rgba(0, 0, 0, 0.7); }
+.wk-pin {
+  position: absolute; top: -16px; left: 50%; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f6d38f, var(--c) 60%);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.45);
+}
+.wk-page .wk-card h4 { margin: 0 0 8px; }
+.wk-page .wk-card-meta {
+  margin: 0 0 6px; font: 700 0.62em/1.3 var(--title);
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--teal);
+}
+.wk-card-body { font-size: 0.8em; line-height: 1.5; }
+.wk-page .wk-card-body p { margin: 0 0 0.7em; max-width: none; }
+.wk-page .wk-card-body p:last-child { margin: 0; }
+.wk-motion .wk-board .wk-card[data-reveal] { opacity: 0; transform: translateY(-50px) rotate(calc(var(--tilt) * -4)) scale(1.06); }
+.wk-motion .wk-board .wk-card[data-reveal].is-in {
+  opacity: 1; transform: rotate(var(--tilt));
+  transition: opacity 0.5s ease calc(var(--i) * 0.14s), transform 0.75s cubic-bezier(0.3, 1.4, 0.5, 1) calc(var(--i) * 0.14s), box-shadow 0.4s;
+}
+.wk-motion .wk-board .wk-card.is-in:hover { transform: rotate(0deg) translateY(-6px); transition-delay: 0s; }
+.wk-motion .wk-card .wk-pin { transform: translateY(-12px); opacity: 0; transition: transform 0.4s, opacity 0.3s; }
+.wk-motion .wk-card.is-in .wk-pin { transform: none; opacity: 1; transition-delay: calc(var(--i) * 0.14s + 0.45s); }
+
+/* ---------- numbered steps ---------- */
+.wk-steps { list-style: none; margin: 1.4em 0; padding: 0; display: grid; gap: 16px; max-width: 72ch; }
+.wk-steps > li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; align-items: start; }
+.wk-step-n {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+  background: var(--teal); color: #fff;
+  font: 700 0.82em/1 var(--title); font-variant-numeric: tabular-nums;
+}
+.wk-band--dark .wk-step-n, .wk-band--teal .wk-step-n { background: var(--cream); color: var(--night); }
+.wk-page .wk-step-t {
+  margin: 8px 0 0.3em;
+  font: 700 1em/1.35 var(--title); color: var(--pine);
+}
+.wk-band--dark .wk-step-t, .wk-band--teal .wk-step-t { color: var(--cream); }
+.wk-step-b { font-size: 0.8em; }
+.wk-page .wk-step-b p { margin: 0 0 0.6em; }
+.wk-page .wk-step-b p:last-child { margin: 0; }
+
+/* ---------- tables ---------- */
+.wk-table { margin: 1.6em 0; }
+.wk-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.wk-table table { width: 100%; border-collapse: collapse; font-size: 0.8em; }
+.wk-table th, .wk-table td {
+  padding: 10px 14px; text-align: left; vertical-align: top;
+  border-bottom: 1px solid rgba(29, 113, 95, 0.16);
+}
+.wk-band--dark .wk-table th, .wk-band--dark .wk-table td,
+.wk-band--teal .wk-table th, .wk-band--teal .wk-table td { border-bottom-color: rgba(231, 243, 238, 0.22); }
+.wk-table thead th {
+  font: 700 0.86em/1.3 var(--title); text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--teal);
+}
+.wk-band--dark .wk-table thead th, .wk-band--teal .wk-table thead th { color: var(--mint); }
+.wk-table tbody th { font-weight: 600; }
+.wk-table figcaption { margin: 10px 2px 0; font-size: 0.8em; color: var(--muted); }
+.wk-band--dark .wk-table figcaption, .wk-band--teal .wk-table figcaption { color: var(--on-dark-muted); }
+
+/* ---------- inline code, from a rendered write-up ---------- */
+.wk-page code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82em; padding: 0.12em 0.4em; border-radius: 5px;
+  background: rgba(29, 113, 95, 0.1);
+}
+.wk-band--dark code, .wk-band--teal code { background: rgba(231, 243, 238, 0.14); }
+
+/* ---------- scroll reveal ---------- */
+.wk-motion [data-reveal] {
+  opacity: 0; transform: translateY(34px);
+  transition: opacity 0.8s ease, transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.wk-motion [data-reveal].is-in { opacity: 1; transform: none; }
+
+/* ---------- smaller screens ---------- */
+@media (max-width: 1240px) {
+  .wk-split { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 1100px) {
+  .wk-page { --side: 276px; }
+}
+@media (max-width: 900px) {
+  .wk-hero { height: clamp(240px, 56vw, 400px); }
+  .wk-hero-text { top: 22%; right: 5%; }
+  .wk-title { font-size: clamp(40px, 9vw, 72px); }
+  .wk-band { padding: 100px 0 70px; }
+}
+/* phones: the navigator stays on the left as a slim rail of section numbers */
+@media (max-width: 680px) {
+  .wk-page { --side: 62px; }
+  .wk-side { margin-left: 8px; padding: 16px 8px; border-radius: 16px; }
+  .wk-toc { gap: 6px; }
+  .wk-toc-head { padding: 2px 0 6px !important; text-align: center; }
+  .wk-toc-head span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .wk-toc-head b { display: block; font: 700 13px/1 var(--title); }
+  .wk-toc ol { gap: 10px; padding: 0; border: 0; }
+  .wk-toc a { padding: 2px 0; margin: 0; border: 0; text-align: center; }
+  .wk-toc a span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .wk-toc a b { display: block; font: 700 1em/1.2 var(--title); }
+  .wk-board { grid-template-columns: minmax(0, 1fr); }
+  .wk-hero-text { left: 4%; right: 4%; }
+  .wk-quote { flex-direction: column; align-items: flex-start; }
+  .wk-steps > li { grid-template-columns: 34px minmax(0, 1fr); gap: 12px; }
+  .wk-step-n { width: 34px; height: 34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wk-title { animation: none; }
+  .wk-page [data-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------- pages without a navigator: one centred column ---------- */
+.wk-page.is-sideless { --side: 0px; }
+.wk-page.is-sideless .wk-body { display: block; }
+.wk-page.is-sideless .wk-main > .wk-band { margin-left: 0; padding-left: 0; }
+.wk-page.is-sideless .wk-inner,
+.wk-page.is-sideless .wk-inner p,
+.wk-page.is-sideless .wk-lead { text-align: center; margin-left: auto; margin-right: auto; }
+
+/* ---------- photographs: one size and look on every page except the Gallery ----------
+   A photo, or a pair, is a centred row at one shared height with rounded corners
+   and a small gap. Change --photo-h here and every page follows. */
+.wk-page { --photo-h: clamp(170px, 22.5vw, 320px); }
+.wk-photos { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: clamp(14px, 2vw, 28px); margin: clamp(26px, 4vw, 48px) 0; }
+.wk-photos img { display: block; height: var(--photo-h); width: auto; max-width: 100%; border-radius: 10px; }
+@media (max-width: 600px) { .wk-photos img { height: auto; width: 100%; } }
+
+
+
+/* Pages with a navigator: content starts at the navigator's edge and fills the
+   rest of the page width, instead of sitting centred in a narrow column. */
+.wk-page:not(.is-sideless) .wk-inner { max-width: none; margin: 0; }
+.wk-page:not(.is-sideless) .wk-inner p,
+.wk-page:not(.is-sideless) .wk-inner .wk-list,
+.wk-page:not(.is-sideless) .wk-inner .wk-lead,
+.wk-page:not(.is-sideless) .wk-inner .wk-steps { max-width: none; }
+.wk-page:not(.is-sideless) .wk-photos { justify-content: flex-start; }
